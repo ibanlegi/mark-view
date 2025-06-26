@@ -1,0 +1,314 @@
+/* === Genral === */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* === Typography & Content === */
+
+h1 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+}
+
+h2 {
+  color: #34495e;
+  border-bottom: 1px solid #bdc3c7;
+}
+
+h3, h4, h5, h6 {
+  color: #2c3e50;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul, ol {
+  padding-left: 20px;
+}
+
+/* Citation */
+blockquote {
+  border-left: 4px solid #3498db;
+  padding: 10px;
+  background: #ecf0f1;
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+/* Code */
+pre {
+  background: #2d2d2d;
+  color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+code {
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-family: "Courier New", monospace;
+  font-size: small;
+}
+
+/* === Tables === */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+}
+
+th {
+  background: #3498db;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background: #ecf0f1;
+}
+
+/* === Main Content Container === */
+
+#content {
+    background: white;
+    flex: 1;
+    padding: 20px;
+    margin: 0px 25px;
+    transition: padding-top 0.3s ease;
+}
+
+/* === Table of Contents (TOC) === */
+
+#toc {
+  background: #ffffff;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+#toc h2 {
+  font-size: 18px;
+  margin-top: 0;
+}
+
+#toc ul {
+  list-style: none;
+  padding-left: 0;
+  max-height: none;
+  overflow-y: visible;
+}
+
+#toc li {
+  margin: 5px 0;
+}
+
+#toc a {
+  color: #3498db;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+#toc a:hover,
+#toc a.active {
+  background: #ecf0f1;
+}
+
+
+/* === TOC Toggle Buttons (Desktop + Mobile) === */
+
+#toc-toggle-desktop,
+#toc-toggle-mobile {
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #555;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+  text-align: left;
+  width: 100%;
+}
+
+/* These styles are overwritten on mobile for #toc-toggle-mobile */
+#toc-toggle-desktop:hover,
+#toc-toggle-desktop:focus,
+#toc-toggle-mobile:hover,
+#toc-toggle-mobile:focus {
+  color: #222;
+  outline: none;
+}
+
+/* === Utility Buttons === */
+
+#home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #555;
+  font-size: 13px;
+  text-decoration: none;
+  margin-bottom: 15px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+#home-button:hover {
+  opacity: 1;
+  color: #222;
+}
+
+.copy-code-btn {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #333;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, background 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.copy-code-btn:hover {
+    opacity: 1;
+    border-color: #888;
+}
+
+/* === Back to Top Button === */
+
+#back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: #333;
+    color: white;
+    font-size: 24px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+    display: none;
+    z-index: 999;
+    user-select: none;
+}
+
+#back-to-top:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.7);
+    text-decoration: none;
+}
+
+/* === Media Queries === */
+
+/* --- Desktop Styles --- */
+
+@media (min-width: 769px) {
+    #toc {
+        width: 250px;
+        max-height: 100vh;
+        position: sticky;
+        top: 0;
+        transform: translateX(0);
+    }
+  
+    #toc.visible {
+        transform: translateX(0);
+    }
+
+    #toc-toggle-desktop {
+        display: inline-block;
+    }
+    
+    #toc-toggle-mobile {
+        display: none;
+    }
+}
+
+/* --- Mobile Styles --- */
+@media (max-width: 768px) {
+    #toc {
+        width: 100%;
+        max-height: 200px;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        padding: 0px 15px;
+        position: fixed;
+        top: 50px;
+        left: 0;
+        right: 0;
+        transform: translateY(-100%);
+    }
+    
+    #toc.visible {
+        transform: translateY(0);
+    }
+    
+    #content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    #toc-toggle-desktop {
+        display: none;
+    }
+    
+    #toc-toggle-mobile {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #FFFFFF;
+        color: white;
+        border: none;
+        font-size: 50px;
+        font-weight: bold;
+        padding: 12px 15px;
+        cursor: pointer;
+        z-index: 1100;
+        text-align: left;
+    }
+    
+    #toc-toggle-mobile:hover,
+    #toc-toggle-mobile:focus {
+        background: #FFFFFF;
+        color: white;
+        outline: none;
+    }
+}
+
+

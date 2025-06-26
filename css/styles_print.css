@@ -1,0 +1,100 @@
+/* === Print Styles === */
+@media print {
+
+  /* General */
+  html, body {
+    background: white !important;
+    color: #000 !important;
+    line-height: 1.4;
+    font-size: 12pt;
+    display: block;
+  }
+
+  /* Hide on-screen-only UI */
+  #back-to-top,
+  .copy-code-btn,
+  #toc-toggle-desktop,
+  #toc-toggle-mobile,
+  #home-button {
+    display: none !important;
+  }
+
+  /* TOC styled for print */
+  #toc {
+    all: unset;
+    display: block;
+    margin-bottom: 40px;
+    padding: 0;
+  }
+
+  #toc h2 {
+    font-size: 16pt;
+    margin-bottom: 10px;
+    color: #000;
+  }
+
+  #toc ul {
+    padding-left: 20px;
+    margin: 0;
+  }
+
+  #toc li {
+    margin: 5px 0;
+  }
+
+  #toc a {
+    color: #000 !important;
+    text-decoration: none;
+    font-size: 12pt;
+  }
+
+  /* Content layout */
+  #content {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  /* Ensure spacing between TOC and content */
+  #content::before {
+    content: "";
+    display: block;
+    height: 30px;
+  }
+
+  /* Prevent breaks inside blocks */
+  pre, blockquote, table {
+    page-break-inside: avoid;
+  }
+
+  
+  /* Force line breaks inside code blocks */
+  pre, code {
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    overflow: visible !important;
+    font-size: 10pt !important;
+  }
+  
+  pre {
+    background: #E1E1E1 !important;
+    color: #000 !important;
+  }
+
+  /* Print URLs if desired */
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+  }
+
+  /* Headings + lists print handling */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+}
