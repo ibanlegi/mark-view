@@ -82,7 +82,7 @@ function addHeadingIdsAndNumbers() {
     counters[level]++;
     for (let i = level + 1; i < counters.length; i++) counters[i] = 0;
 
-    const numbering = counters.slice(1, level + 1).join('.');
+    const numbering = counters.slice(0, level + 1).join('.');
     header.textContent = `${numbering}. ${header.textContent}`;
 
     if (!header.id) {
