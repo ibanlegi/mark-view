@@ -77,7 +77,15 @@ npm start
    Replace `path/to/your.md` with the relative path to your Markdown file.
 
 
----
+### Demo (GIF)
+
+<p align="center">
+  <img src="demo.gif" alt="Demo" width="600">
+</p>
+
+
+> This animation shows usage of the viewer with TOC toggle, code block copy, and scrolling. The loaded file is `example.md`.
+
 
 ## Dependencies and References
 
