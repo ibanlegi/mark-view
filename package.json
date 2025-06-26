@@ -1,0 +1,14 @@
+{
+  "name": "mark-view",
+  "version": "1.0.0",
+  "description": "Simple web app to display Markdown files as HTML with TOC and code copy functionality.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "I. Leginyora",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

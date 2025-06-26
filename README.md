@@ -34,27 +34,48 @@ The main goal is to provide a clean and user-friendly interface to view Markdown
 - **favicon.png**  
   The favicon displayed in the browser tab.
 
+- **server.js**  
+  A simple Node.js Express server script to serve the project files and Markdown documents locally.
+
+- **package.json**  
+  Contains metadata and dependencies for the Node.js server.
+
 ---
 
 ## How to Use / Run
 
-1. **Host the project files on a web server**  
-   You can use any static server (e.g., `live-server`, `http-server`, Apache, Nginx).
+### Option 1: Static Server (any)
 
-2. **Open the `index.html` file in a browser** with URL parameters specifying the Markdown file and optional title, for example:  
+1. Host the project files on any static web server (e.g., `live-server`, Apache, Nginx).
+
+2. Open `index.html` in a browser with URL parameters specifying the Markdown file and optional title, for example:  
 ```
 
 index.html?file=docs/readme.md\&title=Project%20Documentation
 
 ```
 
-3. The page will fetch the specified Markdown file, convert it to HTML, and display it with a dynamically generated table of contents.
+### Option 2: Node.js Local Server (recommended)
 
-4. Use the menu button (☰) on mobile to toggle the TOC visibility.
+1. Ensure [Node.js](https://nodejs.org/) is installed.
 
-5. Click on "Copy" buttons inside code blocks to copy code snippets to the clipboard.
+2. Place `server.js` and `package.json` at the root of your project.
 
-6. Scroll down to see the "Back to top" button appear for quick navigation.
+3. Open a terminal and run:
+
+```bash
+npm install
+npm start
+````
+
+4. Open your browser and navigate to:
+
+   ```
+   http://localhost:3000/index.html?file=path/to/your.md&title=Your%20Title
+   ```
+
+   Replace `path/to/your.md` with the relative path to your Markdown file.
+
 
 ---
 
@@ -63,6 +84,9 @@ index.html?file=docs/readme.md\&title=Project%20Documentation
 - **Showdown** (Markdown to HTML converter)  
 CDN: `https://cdn.jsdelivr.net/npm/showdown/dist/showdown.min.js`  
 GitHub: [https://github.com/showdownjs/showdown](https://github.com/showdownjs/showdown)
+
+- **Express**
+  Node.js web framework used to serve files locally.
 
 - **Intersection Observer API**  
 Used for observing which headings are currently visible to highlight the corresponding TOC link.
@@ -79,3 +103,5 @@ Used to copy code snippets to the user's clipboard.
 - The code includes accessibility features such as keyboard toggling of the TOC menu.
 
 - The TOC supports nested headers (`h2` and `h3`), and headings are automatically numbered for clarity.
+
+- Using the Node.js server is recommended for local testing to avoid CORS issues and easily serve all files.
