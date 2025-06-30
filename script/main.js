@@ -54,7 +54,7 @@ function showUploadDialog() {
           const uploadedFilename = encodeURIComponent(file.name);
           const title = encodeURIComponent("Uploaded Markdown File");
 
-          window.location.href = `upload.html?file=${uploadedFilename}&title=${title}&showToc=${showToc}`;
+          window.location.href = `index.html?file=${uploadedFilename}&title=${title}&showToc=${showToc}`;
           resolve();
         };
         reader.readAsText(file);
