@@ -1,184 +1,290 @@
-// Get URL parameters
+// === URL Parameters ===
 const params = new URLSearchParams(window.location.search);
 const markdownFile = params.get("file");
 const pageTitle = params.get("title") || "Untitled";
+const showToc = params.get("showToc") !== "false"; // true by default
 
 document.title = decodeURIComponent(pageTitle);
 
-// Load and convert markdown to HTML
-async function loadMarkdown() {
-  try {
-    const response = await fetch(markdownFile);
-    if (!response.ok) throw new Error("File not found");
+// === Upload Dialog ===
+function showUploadDialog() {
+  Swal.fire({
+    title: "<strong>Upload a Markdown File</strong>",
+    html: `
+      <div id="drop-area" style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 10px;">
+        <p>Drag and drop a <strong>.md</strong> file here</p>
+        <p>or</p>
+        <input type="file" id="fileElem" accept=".md" style="display:none" />
+        <button type="button" id="fileSelect" class="swal2-confirm swal2-styled" style="background-color: #3085d6;">
+          Choose a File
+        </button>
+        <p id="fileName" style="margin-top: 10px; color: #333;"></p>
+        <div style="margin-top: 15px; text-align: left;">
+          <input type="checkbox" id="showTocCheckbox" checked />
+          <label for="showTocCheckbox">Show Table of Contents</label>
+        </div>
+      </div>
+    `,
+    showCloseButton: false,    // No close (X) button
+    showCancelButton: true,
+    allowOutsideClick: false,   // Disable closing by clicking outside
+    focusConfirm: false,
+    confirmButtonText: `<i class="fa fa-thumbs-up"></i> Submit`,
+    confirmButtonAriaLabel: "Submit file",
+    cancelButtonText: "Cancel",
+    cancelButtonAriaLabel: "Cancel upload",
+    preConfirm: () => {
+      const fileInput = document.getElementById("fileElem");
+      const showTocCheckbox = document.getElementById("showTocCheckbox");
 
-    const markdownText = await response.text();
-    const converter = new showdown.Converter({
-      tables: true,
-      strikethrough: true,
-      tasklists: true,
-      simplifiedAutoLink: true
-    });
+      if (!fileInput.files.length || !fileInput.files[0].name.endsWith(".md")) {
+        Swal.showValidationMessage("Please select a valid .md file.");
+        return false;
+      }
 
-    const htmlContent = converter.makeHtml(markdownText);
-    const contentEl = document.getElementById("content");
-    contentEl.innerHTML = htmlContent;
+      const file = fileInput.files[0];
+      const showToc = showTocCheckbox.checked;
 
-    addCopyButtonsToCodeBlocks();
-    addHeadingIdsAndNumbers();
-    generateTOC();
-    observeHeaders();
-    handleBackToTopVisibility();
-  } catch (error) {
-    document.getElementById("content").innerHTML = "Error loading the Markdown file.";
-    console.error("Markdown load error:", error);
-  }
-}
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const content = e.target.result;
+          sessionStorage.setItem("markdown_content", content);
 
-// Add "Copy" buttons to <pre><code> blocks
-function addCopyButtonsToCodeBlocks() {
-  const contentEl = document.getElementById("content");
-  const codeBlocks = contentEl.querySelectorAll('pre > code');
+          const uploadedFilename = encodeURIComponent(file.name);
+          const title = encodeURIComponent("Uploaded Markdown File");
 
-  codeBlocks.forEach(codeBlock => {
-    const pre = codeBlock.parentElement;
-
-    const copyBtn = document.createElement('button');
-    copyBtn.textContent = 'Copy';
-    copyBtn.className = 'copy-code-btn';
-    copyBtn.type = 'button';
-    copyBtn.title = 'Copy code';
-
-    // Style button
-    copyBtn.style.position = 'absolute';
-    copyBtn.style.top = '5px';
-    copyBtn.style.right = '5px';
-    copyBtn.style.padding = '2px 6px';
-    copyBtn.style.fontSize = '0.9em';
-    copyBtn.style.cursor = 'pointer';
-
-    pre.style.position = 'relative';
-    pre.appendChild(copyBtn);
-
-    copyBtn.addEventListener('click', () => {
-      navigator.clipboard.writeText(codeBlock.textContent).then(() => {
-        copyBtn.textContent = 'Copied';
-        setTimeout(() => {
-          copyBtn.textContent = 'Copy';
-        }, 1500);
-      }).catch(() => {
-        alert('Error copying code');
+          window.location.href = `upload.html?file=${uploadedFilename}&title=${title}&showToc=${showToc}`;
+          resolve();
+        };
+        reader.readAsText(file);
       });
-    });
-  });
-}
+    },
+    didOpen: () => {
+      const dropArea = document.getElementById("drop-area");
+      const fileInput = document.getElementById("fileElem");
+      const fileButton = document.getElementById("fileSelect");
+      const fileName = document.getElementById("fileName");
 
-// Add IDs and numbering to H2 and H3 headings
-function addHeadingIdsAndNumbers() {
-  const headers = document.querySelectorAll("#content h1, #content h2, #content h3");
-  const counters = [0, 0, 0];
+      const validateFile = (file) => {
+        if (file && file.name.endsWith(".md")) {
+          fileName.textContent = `Selected file: ${file.name}`;
+          fileName.style.color = "#333";
+          return true;
+        } else {
+          fileName.textContent = "Invalid file type. Only .md allowed.";
+          fileName.style.color = "red";
+          fileInput.value = "";
+          return false;
+        }
+      };
 
-  headers.forEach(header => {
-    const level = parseInt(header.tagName[1]) - 1;
-    counters[level]++;
-    for (let i = level + 1; i < counters.length; i++) counters[i] = 0;
+      fileButton.addEventListener("click", () => fileInput.click());
 
-    const numbering = counters.slice(0, level + 1).join('.');
-    header.textContent = `${numbering}. ${header.textContent}`;
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) validateFile(fileInput.files[0]);
+      });
 
-    if (!header.id) {
-      header.id = 'header-' + numbering.replace(/\./g, '-');
+      ["dragenter", "dragover", "dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
+      });
+
+      ["dragenter", "dragover"].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => {
+          dropArea.style.borderColor = "#3c8dbc";
+          dropArea.style.background = "#f0f8ff";
+        }, false);
+      });
+
+      ["dragleave", "drop"].forEach(eventName => {
+        dropArea.addEventListener(eventName, () => {
+          dropArea.style.borderColor = "#ccc";
+          dropArea.style.background = "white";
+        }, false);
+      });
+
+      dropArea.addEventListener("drop", (e) => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && validateFile(files[0])) {
+          fileInput.files = files;
+        }
+      });
+    }
+  }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.cancel) {
+      window.location.href = "index.html";
     }
   });
 }
 
-// Generate the table of contents
-function generateTOC() {
-  const tocList = document.getElementById("toc-list");
-  tocList.innerHTML = "";
-  const headers = document.querySelectorAll("#content h1, #content h2, #content h3");
 
-  headers.forEach(header => {
-    const level = parseInt(header.tagName[1]) - 1;
-    const li = document.createElement("li");
-    li.style.marginLeft = `${level * 10}px`;
+function setupDropArea() {
+  const dropArea = document.getElementById("drop-area");
+  const fileInput = document.getElementById("fileElem");
+  const fileButton = document.getElementById("fileSelect");
+  const fileName = document.getElementById("fileName");
 
-    const a = document.createElement("a");
-    a.href = `#${header.id}`;
-    a.textContent = header.textContent;
+  fileButton.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => validateFile(fileInput.files[0], fileName));
 
-    li.appendChild(a);
-    tocList.appendChild(li);
+  ["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
+    dropArea.addEventListener(event, e => e.preventDefault());
+  });
+
+  dropArea.addEventListener("drop", e => {
+    const file = e.dataTransfer.files[0];
+    if (validateFile(file, fileName)) fileInput.files = e.dataTransfer.files;
   });
 }
 
-// Observe which heading is in view and highlight it in the TOC
-function observeHeaders() {
-  const options = {
-    root: null,
-    rootMargin: '0px 0px -80% 0px',
-    threshold: 0
-  };
+function validateFile(file, display) {
+  if (file && file.name.endsWith(".md")) {
+    display.textContent = `Selected file: ${file.name}`;
+    display.style.color = "#333";
+    return true;
+  }
+  display.textContent = "Invalid file type. Only .md allowed.";
+  display.style.color = "red";
+  return false;
+}
+
+// === Load Markdown ===
+async function loadMarkdown() {
+  const cachedContent = sessionStorage.getItem("markdown_content");
+
+  if (cachedContent) {
+    renderMarkdown(cachedContent);
+    sessionStorage.removeItem("markdown_content");
+  } else if (markdownFile) {
+    try {
+      const response = await fetch(markdownFile);
+      if (!response.ok) throw new Error("File not found");
+      renderMarkdown(await response.text());
+    } catch (err) {
+      document.getElementById("content").innerHTML = "Error loading the Markdown file.";
+      console.error("Markdown load error:", err);
+    }
+  } else {
+    showUploadDialog();
+  }
+}
+
+function renderMarkdown(text) {
+  const converter = new showdown.Converter({
+    tables: true, strikethrough: true, tasklists: true, simplifiedAutoLink: true
+  });
+
+  const contentEl = document.getElementById("content");
+  contentEl.innerHTML = converter.makeHtml(text);
+
+  addCopyButtons();
+  addHeadingIds();
+  if (showToc) {
+    document.getElementById('toc').style.display = "block";
+    generateTOC();
+    highlightTOC();
+  } else {
+    document.getElementById('toc').style.display = "none";
+  }
+  toggleBackToTop();
+}
+
+function addCopyButtons() {
+  document.querySelectorAll("#content pre > code").forEach(code => {
+    const btn = document.createElement("button");
+    btn.textContent = "Copy";
+    btn.className = "copy-code-btn";
+    Object.assign(btn.style, { position: "absolute", top: "5px", right: "5px" });
+    btn.onclick = () => navigator.clipboard.writeText(code.textContent)
+      .then(() => btn.textContent = "Copied")
+      .finally(() => setTimeout(() => btn.textContent = "Copy", 1500));
+    code.parentElement.style.position = "relative";
+    code.parentElement.appendChild(btn);
+  });
+}
+
+function addHeadingIds() {
+  const counters = [0, 0, 0];
+  document.querySelectorAll("#content h1, #content h2, #content h3").forEach(h => {
+    const level = parseInt(h.tagName[1]) - 1;
+    counters[level]++;
+    for (let i = level + 1; i < 3; i++) counters[i] = 0;
+    const numbering = counters.slice(0, level + 1).join(".");
+    h.textContent = `${numbering}. ${h.textContent}`;
+    h.id = h.id || `header-${numbering.replace(/\./g, '-')}`;
+  });
+}
+
+function generateTOC() {
+  const list = document.getElementById("toc-list");
+  list.innerHTML = "";
+  document.querySelectorAll("#content h1, #content h2, #content h3").forEach(h => {
+    const li = document.createElement("li");
+    li.style.marginLeft = `${(parseInt(h.tagName[1]) - 1) * 10}px`;
+    const a = document.createElement("a");
+    a.href = `#${h.id}`;
+    a.textContent = h.textContent;
+    li.appendChild(a);
+    list.appendChild(li);
+  });
+}
+
+function highlightTOC() {
   const links = document.querySelectorAll('#toc a');
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        links.forEach(link => link.classList.remove('active'));
-        const activeLink = document.querySelector(`#toc a[href="#${entry.target.id}"]`);
-        if (activeLink) activeLink.classList.add('active');
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`#toc a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
       }
     });
-  }, options);
+  }, { rootMargin: '0px 0px -80% 0px' });
 
-  document.querySelectorAll('#content h1, #content h2, #content h3').forEach(header => {
-    observer.observe(header);
-  });
+  document.querySelectorAll('#content h1, #content h2, #content h3').forEach(h => observer.observe(h));
 }
 
-// Show or hide "back to top" button
-function handleBackToTopVisibility() {
-  const backToTop = document.getElementById("back-to-top");
+function toggleBackToTop() {
+  const btn = document.getElementById("back-to-top");
   window.addEventListener("scroll", () => {
-    backToTop.style.display = window.scrollY > 300 ? "block" : "none";
+    btn.style.display = window.scrollY > 300 ? "block" : "none";
   });
 }
 
-// Responsive layout for TOC
+// === Responsive TOC ===
 const toc = document.getElementById('toc');
-const tocToggleMobile = document.getElementById('toc-toggle-mobile');
+const tocToggle = document.getElementById('toc-toggle-mobile');
 const content = document.getElementById('content');
 
-function updateContentPadding() {
-  if (window.innerWidth <= 768 && toc.classList.contains('visible')) {
+function adjustPadding() {
+  if (showToc && window.innerWidth <= 768 && toc.classList.contains('visible')) {
     content.style.paddingTop = '220px';
   } else {
     content.style.paddingTop = '20px';
   }
 }
 
-// Toggle TOC on mobile
-tocToggleMobile.addEventListener('click', () => {
-  toc.classList.toggle('visible');
-  tocToggleMobile.setAttribute('aria-expanded', toc.classList.contains('visible'));
-  updateContentPadding();
-});
+if (tocToggle) {
+  tocToggle.addEventListener('click', () => {
+    toc.classList.toggle('visible');
+    tocToggle.setAttribute('aria-expanded', toc.classList.contains('visible'));
+    adjustPadding();
+  });
 
-// Toggle TOC with keyboard
-tocToggleMobile.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
-    tocToggleMobile.click();
-  }
-});
+  tocToggle.addEventListener('keydown', e => {
+    if (['Enter', ' '].includes(e.key)) {
+      e.preventDefault();
+      tocToggle.click();
+    }
+  });
+}
 
-// Init when page loads
 window.addEventListener('load', () => {
-  if (window.innerWidth > 768) {
+  if (showToc && window.innerWidth > 768) {
     toc.classList.add('visible');
-    content.style.paddingTop = '20px';
   } else {
     toc.classList.remove('visible');
-    tocToggleMobile.setAttribute('aria-expanded', false);
-    content.style.paddingTop = '20px';
+    if (tocToggle) tocToggle.setAttribute('aria-expanded', false);
   }
-  loadMarkdown().then(updateContentPadding);
+  loadMarkdown().then(adjustPadding);
 });

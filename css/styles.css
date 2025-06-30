@@ -232,6 +232,11 @@ tr:nth-child(even) {
     text-decoration: none;
 }
 
+/* === SweetAlert Styles === */
+.swal2-container.swal2-center.swal2-backdrop-show {
+  background-color: white;
+}
+
 /* === Media Queries === */
 
 /* --- Desktop Styles --- */
