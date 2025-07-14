@@ -8,8 +8,6 @@ Additionally, it includes a file upload dialog powered by SweetAlert, allowing u
 
 The main goal is to provide a clean and user-friendly interface to view Markdown documents directly in a browser with additional usability features.
 
----
-
 ## Project Structure
 
 ### Files and Their Roles
@@ -46,8 +44,6 @@ The main goal is to provide a clean and user-friendly interface to view Markdown
 - **package.json**  
   Contains metadata and dependencies for the Node.js server.
 
----
-
 ## How to Use / Run
 
 MarkView offers multiple ways to load and view Markdown files, adapting to different user needs and environments:
@@ -66,8 +62,6 @@ index.html?file=docs/readme.md&title=Project%20Documentation&showToc=true
 
 This is ideal when you already know the file location or want to link to a specific document.
 
----
-
 ### 2. Upload a Local Markdown File via Dialog
 
 If you open `index.html` without URL parameters or if the specified file cannot be loaded, MarkView displays an **upload dialog**.
@@ -80,8 +74,6 @@ If you open `index.html` without URL parameters or if the specified file cannot 
 
 This method is perfect for users who want to view Markdown files stored locally on their computer without manually specifying URLs.
 
----
-
 ### 3. Running via Local Node.js Server (Recommended for Development)
 
 * Use the included `server.js` to run a local Express server.
@@ -91,7 +83,6 @@ This method is perfect for users who want to view Markdown files stored locally 
 
 This setup is recommended for development, testing, or when working with many Markdown files locally.
 
----
 
 ### 4. Responsive Viewing on Mobile Devices
 
@@ -131,8 +122,6 @@ Used for observing which headings are currently visible to highlight the corresp
 
 - **Clipboard API**  
 Used to copy code snippets to the user's clipboard.
-
----
 
 ## Notes
 
