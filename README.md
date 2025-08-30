@@ -35,9 +35,6 @@ The main goal is to provide a clean and user-friendly interface to view Markdown
 - **css/styles_print.css**  
   Print-specific CSS styles for better formatting when printing the page.
 
-- **favicon.png**  
-  The favicon displayed in the browser tab.
-
 - **server.js**  
   A simple Node.js Express server script to serve the project files and Markdown documents locally.
 
@@ -132,3 +129,4 @@ Used to copy code snippets to the user's clipboard.
 - The TOC supports nested headers (`h2` and `h3`), and headings are automatically numbered for clarity.
 
 - Using the Node.js server is recommended for local testing to avoid CORS issues and easily serve all files.
+
