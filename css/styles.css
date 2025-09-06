@@ -300,7 +300,6 @@ tr:nth-child(even) {
         background: #FFFFFF;
         color: white;
         border: none;
-        font-size: 50px;
         font-weight: bold;
         padding: 12px 15px;
         cursor: pointer;
@@ -315,5 +314,6 @@ tr:nth-child(even) {
         outline: none;
     }
 }
+
 
 
