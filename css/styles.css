@@ -1,5 +1,8 @@
 /* === Genral === */
-
+::selection {
+    color: #fff;
+    background: #3b3b3b;
+}
 html {
   scroll-behavior: smooth;
 }
@@ -55,8 +58,8 @@ blockquote {
 
 /* Code */
 pre {
-  background: #2d2d2d;
-  color: #ecf0f1;
+  background: #f3f3f3;
+  color: black;
   padding: 10px;
   border-radius: 5px;
   overflow-x: auto;
@@ -190,18 +193,31 @@ tr:nth-child(even) {
 }
 
 .copy-code-btn {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid #ccc;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 3px;
+  background: #f3f3f3;
+  /*border: 1px solid #d0d7de;*/
+  /*border: 1px solid #ccc;*/
+  border: none;
+  cursor: pointer;
+  padding: 0;
   color: #333;
   opacity: 0.8;
   transition: opacity 0.3s ease, background 0.3s ease;
   backdrop-filter: blur(2px);
 }
 
+
 .copy-code-btn:hover {
     opacity: 1;
-    border-color: #888;
+    /*border-color: #888;*/
 }
 
 /* === Back to Top Button === */
@@ -285,6 +301,7 @@ tr:nth-child(even) {
     #content {
         max-width: 800px;
         margin: 0 auto;
+        padding-top: 200px;
     }
     
     #toc-toggle-desktop {
@@ -298,8 +315,9 @@ tr:nth-child(even) {
         left: 0;
         right: 0;
         background: #FFFFFF;
-        color: white;
+        /*color: white;*/
         border: none;
+        /*font-size: 50px;*/
         font-weight: bold;
         padding: 12px 15px;
         cursor: pointer;
@@ -310,10 +328,9 @@ tr:nth-child(even) {
     #toc-toggle-mobile:hover,
     #toc-toggle-mobile:focus {
         background: #FFFFFF;
-        color: white;
+        /*color: white;*/
         outline: none;
     }
 }
-
 
 
