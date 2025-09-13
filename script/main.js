@@ -25,6 +25,7 @@ function showUploadDialog() {
         </div>
       </div>
     `,
+    footer: '<a href="https://ileginyora.com/d2.html?file=./projects/mark-view/mark-view.md&title=Mark+View+documentation">Read the project overview</a>',
     showCloseButton: false,    // No close (X) button
     showCancelButton: true,
     allowOutsideClick: false,   // Disable closing by clicking outside
