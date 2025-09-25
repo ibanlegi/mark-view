@@ -6,6 +6,8 @@ This project is a simple web-based Markdown viewer that dynamically loads and re
 
 Additionally, it includes a file upload dialog powered by SweetAlert, allowing users to drag-and-drop or select a local .md file to view. The dialog also lets users choose whether to display the table of contents.
 
+A new feature has been added: **file type and service icons are now displayed before links** in the rendered Markdown, providing a visual cue for file types (PDF, images, HTML, etc.) and popular services like GitHub.
+
 The main goal is to provide a clean and user-friendly interface to view Markdown documents directly in a browser with additional usability features.
 
 ## Project Structure
@@ -28,6 +30,7 @@ The main goal is to provide a clean and user-friendly interface to view Markdown
   * **Displaying a SweetAlert upload dialog if no file is specified**, allowing drag & drop or file selection, with an option to show/hide the TOC
   * Redirecting to `index.html` if the upload dialog is canceled
   * Preventing the dialog from being dismissed by clicking outside
+  * **Adding icons before links** to indicate file types and services (PDF, images, HTML, GitHub, etc.)
 
 - **css/styles.css**  
   CSS styles for the Markdown content presentation.
@@ -88,6 +91,8 @@ MarkView is designed to work well on different screen sizes:
 * The Table of Contents (TOC) can be toggled on mobile using a dedicated button.
 * Content layout adapts to smaller screens for readability.
 * Copy-to-clipboard buttons for code blocks work on mobile browsers.
+* Icons before links are also displayed on mobile, providing clear visual cues for file types and services.
+
 
 This ensures a good reading experience wherever you are.
 
@@ -129,4 +134,6 @@ Used to copy code snippets to the user's clipboard.
 - The TOC supports nested headers (`h2` and `h3`), and headings are automatically numbered for clarity.
 
 - Using the Node.js server is recommended for local testing to avoid CORS issues and easily serve all files.
+
+- **New feature:** icons are displayed before links to indicate file types and services.
 
