@@ -188,6 +188,51 @@ function renderMarkdown(text) {
     document.getElementById('toc').style.display = "none";
   }
   toggleBackToTop();
+  addFileIcons();
+}
+
+function addFileIcons() {
+  const links = document.querySelectorAll("#content a[href]");
+  links.forEach(link => {
+    const url = link.getAttribute("href");
+    if (!url) return;
+
+    const ext = url.split('.').pop().toLowerCase();
+    let iconUrl = "";
+
+    if (url.includes("github.com")) {
+      iconUrl = "https://img.icons8.com/material-rounded/24/github.png";
+    } else {
+      switch (ext) {
+        case "pdf":
+          iconUrl = "https://img.icons8.com/material-rounded/24/pdf-2.png";
+          break;
+        case "jpg":
+        case "jpeg":
+        case "png":
+        case "gif":
+          iconUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Image-x-generic.svg/20px-Image-x-generic.svg.png";
+          break;
+        case "html":
+        case "htm":
+        case "php":
+          iconUrl = "https://img.icons8.com/ios/50/internet--v1.png";
+          break;
+      }
+    }
+
+    if (iconUrl) {
+      const img = document.createElement("img");
+      img.src = iconUrl;
+      img.alt = ext ? "[" + ext.toUpperCase() + "]" : "";
+      img.width = 16;
+      img.height = 16;
+      img.style.marginRight = "4px";
+      img.style.verticalAlign = "middle";
+
+      link.prepend(img);
+    }
+  });
 }
 
 function addCopyButtons() {
