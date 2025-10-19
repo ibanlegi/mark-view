@@ -211,7 +211,7 @@ function addFileIcons() {
         case "jpeg":
         case "png":
         case "gif":
-          iconUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Image-x-generic.svg/20px-Image-x-generic.svg.png";
+          iconUrl = "https://img.icons8.com/?size=100&id=14089&format=png&color=000000";
           break;
         case "html":
         case "htm":
