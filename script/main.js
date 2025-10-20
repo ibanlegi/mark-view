@@ -192,48 +192,52 @@ function renderMarkdown(text) {
 }
 
 function addFileIcons() {
-  const links = document.querySelectorAll("#content a[href]");
-  links.forEach(link => {
-    const url = link.getAttribute("href");
-    if (!url) return;
+  const ICONS = {
+    github: "https://img.icons8.com/material-rounded/24/github.png",
+    wiki: "https://img.icons8.com/?size=100&id=gDi80jDvhca2&format=png&color=000000",
+    pdf: "https://img.icons8.com/?size=100&id=4bYa3chMzX2w&format=png&color=000000",
+    image: "https://img.icons8.com/?size=100&id=14089&format=png&color=000000",
+    web: "https://img.icons8.com/ios/50/internet--v1.png",
+    default: "https://img.icons8.com/?size=100&id=59826&format=png&color=000000",
+  };
+
+  const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"];
+  const WEB_EXTENSIONS = ["html", "htm", "php"];
+
+  const getIconUrl = (url) => {
+    if (url.includes("github.com")) return ICONS.github;
+    if (url.includes("wiki")) return ICONS.wiki;
 
     const ext = url.split('.').pop().toLowerCase();
-    let iconUrl = "";
+    if (ext === "pdf") return ICONS.pdf;
+    if (IMAGE_EXTENSIONS.includes(ext)) return ICONS.image;
+    if (WEB_EXTENSIONS.includes(ext)) return ICONS.web;
 
-    if (url.includes("github.com")) {
-      iconUrl = "https://img.icons8.com/material-rounded/24/github.png";
-    } else {
-      switch (ext) {
-        case "pdf":
-          iconUrl = "https://img.icons8.com/material-rounded/24/pdf-2.png";
-          break;
-        case "jpg":
-        case "jpeg":
-        case "png":
-        case "gif":
-          iconUrl = "https://img.icons8.com/?size=100&id=14089&format=png&color=000000";
-          break;
-        case "html":
-        case "htm":
-        case "php":
-          iconUrl = "https://img.icons8.com/ios/50/internet--v1.png";
-          break;
-      }
-    }
+    return ICONS.default;
+  };
 
-    if (iconUrl) {
-      const img = document.createElement("img");
-      img.src = iconUrl;
-      img.alt = ext ? "[" + ext.toUpperCase() + "]" : "";
-      img.width = 16;
-      img.height = 16;
-      img.style.marginRight = "4px";
-      img.style.verticalAlign = "middle";
+  const createIcon = (url) => {
+    const ext = url.split('.').pop().toLowerCase();
+    const img = document.createElement("img");
+    img.src = getIconUrl(url);
+    img.alt = ext ? `[${ext.toUpperCase()}]` : "";
+    Object.assign(img.style, {
+      width: "16px",
+      height: "16px",
+      marginRight: "4px",
+      verticalAlign: "middle",
+    });
+    return img;
+  };
 
-      link.prepend(img);
-    }
+  document.querySelectorAll("#content a[href]").forEach(link => {
+    const url = link.getAttribute("href");
+    if (!url) return;
+    const icon = createIcon(url);
+    link.prepend(icon);
   });
 }
+
 
 function addCopyButtons() {
   document.querySelectorAll("#content pre > code").forEach(code => {
