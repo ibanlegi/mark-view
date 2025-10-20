@@ -197,12 +197,10 @@ function addFileIcons() {
     wiki: "https://img.icons8.com/?size=100&id=gDi80jDvhca2&format=png&color=000000",
     pdf: "https://img.icons8.com/?size=100&id=4bYa3chMzX2w&format=png&color=000000",
     image: "https://img.icons8.com/?size=100&id=14089&format=png&color=000000",
-    web: "https://img.icons8.com/ios/50/internet--v1.png",
     default: "https://img.icons8.com/?size=100&id=59826&format=png&color=000000",
   };
 
   const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"];
-  const WEB_EXTENSIONS = ["html", "htm", "php"];
 
   const getIconUrl = (url) => {
     if (url.includes("github.com")) return ICONS.github;
@@ -211,7 +209,6 @@ function addFileIcons() {
     const ext = url.split('.').pop().toLowerCase();
     if (ext === "pdf") return ICONS.pdf;
     if (IMAGE_EXTENSIONS.includes(ext)) return ICONS.image;
-    if (WEB_EXTENSIONS.includes(ext)) return ICONS.web;
 
     return ICONS.default;
   };
